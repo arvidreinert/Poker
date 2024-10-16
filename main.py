@@ -2,9 +2,7 @@ from setup import *
 from rectangle import Rectangle
 class Poker():
     def __init__(self):
-        self.known_cards = []
         self.cards_image_sheet = SpriteSheet("ace-159857_1280.png")
-        self.players_good_cards = {}
         positions = [(110,260),(220,260),(width/2-110,115),(width/2,115),(width-220,260),(width-110,260),(110,height-260),(220,height-260),(width/2-110,height-115),(width/2,height-115),(width-220,height-260),(width-110,height-260)]
         self.objects = []
         y = 1
@@ -94,20 +92,92 @@ class Poker():
                     ps.append(rank)
             possible_straights = []
             for card in self.cards:
-                if self.cards.index(card)%6 != 0:
-                    for rank in ps:
-                        if rank in card and card not in possible_straights and card not in players_cards:
+                for rank in ps:
+                    if rank in card and card not in possible_straights and card not in players_cards:
+                        if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
                             possible_straights.append(card)
             return possible_straights
         else:
             return False
+
     def get_missing_cards_to_pair(self,player,is_turn):
-        
-    def get_net_good_cards(self, player):
-        pass
+        possible_pairs = []
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_ranks = (0,0)
+        try:
+            player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),self.card_rankings.index(players_listed_cards[1][1]))
+        except:
+            if "1" in players_listed_cards[1] and "0" in players_listed_cards[1] and "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                player_cards_ranks = (8,8)
+            else:
+                if "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                    player_cards_ranks = (8, self.card_rankings.index(players_listed_cards[1][1]))
+                if "1" in players_listed_cards[1] and "0" in players_listed_cards[1]:
+                    player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),8)
+        if player_cards_ranks[0] == player_cards_ranks[1]:
+            return []
+        else:
+            player_cards_ranks = (self.card_rankings[player_cards_ranks[0]], self.card_rankings[player_cards_ranks[1]])
+            for card in self.cards:
+                for rank in player_cards_ranks:
+                    if rank in card and card not in possible_pairs and card not in players_cards:
+                        if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
+                            possible_pairs.append(card)
+            return possible_pairs
+
+    def get_missing_cards_to_two_pair(self,player,is_turn):
+        possible_pairs = []
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_ranks = (0,0)
+        try:
+            player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),self.card_rankings.index(players_listed_cards[1][1]))
+        except:
+            if "1" in players_listed_cards[1] and "0" in players_listed_cards[1] and "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                player_cards_ranks = (8,8)
+            else:
+                if "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                    player_cards_ranks = (8, self.card_rankings.index(players_listed_cards[1][1]))
+                if "1" in players_listed_cards[1] and "0" in players_listed_cards[1]:
+                    player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),8)
+
+        player_cards_ranks = (self.card_rankings[player_cards_ranks[0]], self.card_rankings[player_cards_ranks[1]])
+        for card in self.cards:
+            for rank in player_cards_ranks:
+                if rank in card and card not in possible_pairs and card not in players_cards:
+                    if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
+                        possible_pairs.append(card)
+        return possible_pairs
+
+    def get_missing_cards_to_three_of_a_kind(self,player,is_turn):
+        possible_pairs = []
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_ranks = (0,0)
+        try:
+            player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),self.card_rankings.index(players_listed_cards[1][1]))
+        except:
+            if "1" in players_listed_cards[1] and "0" in players_listed_cards[1] and "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                player_cards_ranks = (8,8)
+            else:
+                if "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                    player_cards_ranks = (8, self.card_rankings.index(players_listed_cards[1][1]))
+                if "1" in players_listed_cards[1] and "0" in players_listed_cards[1]:
+                    player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),8)
+
+        player_cards_ranks = (self.card_rankings[player_cards_ranks[0]], self.card_rankings[player_cards_ranks[1]])
+        for card in self.cards:
+            for rank in player_cards_ranks:
+                if rank in card and card not in possible_pairs and card not in players_cards:
+                    if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
+                        possible_pairs.append(card)
+        return possible_pairs
     
     def main_loop(self):
-        print(self.missing_cards_to_straight("player1", True))
+        print(self.get_missing_cards_to_pair("player1",True))
+        print(self.missing_cards_to_straight("player1",True))
+        print(self.get_missing_cards_to_two_pair("player1",True))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
