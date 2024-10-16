@@ -54,7 +54,6 @@ class Poker():
                 pygame.mixer.Channel(1).set_volume(2)
 
     def missing_cards_to_straight(self,player, is_turn):
-        start = time.time()
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
         player_cards_ranks = (0,0)
@@ -93,18 +92,17 @@ class Poker():
             for liste in possible_straights:
                 for rank in liste:
                     ps.append(rank)
-            print(possible_straights)
             possible_straights = []
             for card in self.cards:
                 if self.cards.index(card)%6 != 0:
                     for rank in ps:
                         if rank in card and card not in possible_straights and card not in players_cards:
                             possible_straights.append(card)
-
             return possible_straights
         else:
             return False
-
+    def get_missing_cards_to_pair(self,player,is_turn):
+        
     def get_net_good_cards(self, player):
         pass
     
