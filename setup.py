@@ -1,6 +1,6 @@
 from operator import index
 from screeninfo import get_monitors
-import pygame, sys,random, math
+import pygame, sys,random, math,time
 
 #initialyse the module:
 pygame.init()
