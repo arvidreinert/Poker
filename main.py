@@ -51,7 +51,7 @@ class Poker():
                 pygame.mixer.Channel(0).play(pygame.mixer.Sound("Aufzeichnung.mp3"))
                 pygame.mixer.Channel(1).set_volume(2)
 
-    def missing_cards_to_straight(self,player, is_turn):
+    def missing_cards_to_straight(self,player, is_flop):
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
         player_cards_ranks = (0,0)
@@ -80,7 +80,7 @@ class Poker():
                             current_straight[y] = self.card_rankings[player_cards_ranks[x]-offset+y]
                     if len(current_straight) == 5 and 0 not in current_straight:
                         if current_straight not in possible_straights:
-                            if is_turn == True and self.card_rankings[player_cards_ranks[0]] in current_straight and self.card_rankings[player_cards_ranks[1]] in current_straight:
+                            if self.card_rankings[player_cards_ranks[0]] in current_straight and self.card_rankings[player_cards_ranks[1]] in current_straight:
                                 possible_straights.append(current_straight.copy())
                             else:
                                 pass
@@ -100,7 +100,7 @@ class Poker():
         else:
             return False
 
-    def get_missing_cards_to_pair(self,player,is_turn):
+    def get_missing_cards_to_pair(self,player,is_flop):
         possible_pairs = []
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
@@ -126,7 +126,7 @@ class Poker():
                             possible_pairs.append(card)
             return possible_pairs
 
-    def get_missing_cards_to_two_pair(self,player,is_turn):
+    def get_missing_cards_to_two_pair(self,player,is_flop):
         possible_pairs = []
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
@@ -150,7 +150,7 @@ class Poker():
                         possible_pairs.append(card)
         return possible_pairs
 
-    def get_missing_cards_to_three_of_a_kind(self,player,is_turn):
+    def get_missing_cards_to_three_of_a_kind(self,player,is_flop):
         possible_pairs = []
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
@@ -174,7 +174,7 @@ class Poker():
                         possible_pairs.append(card)
         return possible_pairs
 
-    def get_missing_cards_to_four_of_a_kind(self,player,is_turn):
+    def get_missing_cards_to_four_of_a_kind(self,player,is_flop):
         possible_pairs = []
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
@@ -198,7 +198,7 @@ class Poker():
                         possible_pairs.append(card)
         return possible_pairs
 
-    def get_missing_cards_to_flush(self,player,is_turn):
+    def get_missing_cards_to_flush(self,player,is_flop):
         possible_pairs = []
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
@@ -211,7 +211,7 @@ class Poker():
                         possible_pairs.append(card)
         return possible_pairs
 
-    def get_missing_cards_to_full_house(self,player,is_turn):
+    def get_missing_cards_to_full_house(self,player,is_flop):
         possible_pairs = []
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
@@ -235,7 +235,7 @@ class Poker():
                         possible_pairs.append(card)
         return possible_pairs
 
-    def get_missing_cards_to_straightflush(self,player,is_turn):
+    def get_missing_cards_to_straightflush(self,player,is_flop):
         possible_straights = []
         players_cards = self.players_cards[player]
         players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
@@ -268,7 +268,7 @@ class Poker():
                             current_straight[y] = self.card_rankings[player_cards_ranks[x]-offset+y]
                     if len(current_straight) == 5 and 0 not in current_straight:
                         if current_straight not in possible_straights:
-                            if is_turn == True and self.card_rankings[player_cards_ranks[0]] in current_straight and self.card_rankings[player_cards_ranks[1]] in current_straight:
+                            if is_flop == True and self.card_rankings[player_cards_ranks[0]] in current_straight and self.card_rankings[player_cards_ranks[1]] in current_straight:
                                 possible_straights.append(current_straight.copy())
                             else:
                                 pass
@@ -290,7 +290,7 @@ class Poker():
         else:
             return False
     
-    def get_missing_cards_to_royal_Flush(self,player,is_turn):
+    def get_missing_cards_to_royal_Flush(self,player,is_flop):
         needed_ranks = ["A","K","Q","J","10"]
         possible_straights = []
         players_cards = self.players_cards[player]
@@ -313,6 +313,10 @@ class Poker():
         if player_cards_color[0] == player_cards_color[1] and player_cards_ranks[0] in needed_ranks and player_cards_ranks[1] in needed_ranks:
             for rank in needed_ranks:
                 possible_straights.append(f"{player_cards_color[0]}{rank}") 
+                
+    def get_most_possible_hand(self,plaayer,is_flop):
+        if is_flop:
+            pass
 
     def main_loop(self):
         print(self.get_missing_cards_to_straightflush("player1",True))
