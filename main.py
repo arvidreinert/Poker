@@ -148,7 +148,7 @@ class Poker():
                 if rank in card and card not in possible_pairs and card not in players_cards:
                     if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
                         possible_pairs.append(card)
-        return possible_pairs
+        return possible_pairs, player_cards_ranks[0] == player_cards_ranks[1]
 
     def get_missing_cards_to_three_of_a_kind(self,player,is_flop):
         possible_pairs = []
@@ -172,7 +172,7 @@ class Poker():
                 if rank in card and card not in possible_pairs and card not in players_cards:
                     if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
                         possible_pairs.append(card)
-        return possible_pairs
+        return possible_pairs, player_cards_ranks[0] == player_cards_ranks[1]
 
     def get_missing_cards_to_four_of_a_kind(self,player,is_flop):
         possible_pairs = []
@@ -194,9 +194,8 @@ class Poker():
         for card in self.cards:
             for rank in player_cards_ranks:
                 if rank in card and card not in possible_pairs and card not in players_cards:
-                    if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
-                        possible_pairs.append(card)
-        return possible_pairs
+                    possible_pairs.append(card)
+        return possible_pairs, player_cards_ranks[0] == player_cards_ranks[1]
 
     def get_missing_cards_to_flush(self,player,is_flop):
         possible_pairs = []
@@ -231,7 +230,6 @@ class Poker():
         for card in self.cards:
             for rank in player_cards_ranks:
                 if rank in card and card not in possible_pairs and card not in players_cards:
-                    if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
                         possible_pairs.append(card)
         return possible_pairs
 
@@ -313,11 +311,23 @@ class Poker():
         if player_cards_color[0] == player_cards_color[1] and player_cards_ranks[0] in needed_ranks and player_cards_ranks[1] in needed_ranks:
             for rank in needed_ranks:
                 possible_straights.append(f"{player_cards_color[0]}{rank}") 
+            return possible_straights
+        else:
+            return False
                 
-    def get_most_possible_hand(self,plaayer,is_flop):
+    def get_most_possible_hand(self,player,is_flop):
         if is_flop:
-            pass
+            best = ["",0]
+            x = self.get_missing_cards_to_pair(player,True)
+            if not x == []:
+                best = ["pair",0.5]
 
+            x,y = self.get_missing_cards_to_two_pair(player,True)
+            if y:
+                x = len(x)/2
+                if x > best[1]:
+                    best = ["two_pair",x]
+            
     def main_loop(self):
         print(self.get_missing_cards_to_straightflush("player1",True))
         while True:
