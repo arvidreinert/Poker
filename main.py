@@ -173,11 +173,149 @@ class Poker():
                     if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
                         possible_pairs.append(card)
         return possible_pairs
+
+    def get_missing_cards_to_four_of_a_kind(self,player,is_turn):
+        possible_pairs = []
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_ranks = (0,0)
+        try:
+            player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),self.card_rankings.index(players_listed_cards[1][1]))
+        except:
+            if "1" in players_listed_cards[1] and "0" in players_listed_cards[1] and "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                player_cards_ranks = (8,8)
+            else:
+                if "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                    player_cards_ranks = (8, self.card_rankings.index(players_listed_cards[1][1]))
+                if "1" in players_listed_cards[1] and "0" in players_listed_cards[1]:
+                    player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),8)
+
+        player_cards_ranks = (self.card_rankings[player_cards_ranks[0]], self.card_rankings[player_cards_ranks[1]])
+        for card in self.cards:
+            for rank in player_cards_ranks:
+                if rank in card and card not in possible_pairs and card not in players_cards:
+                    if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
+                        possible_pairs.append(card)
+        return possible_pairs
+
+    def get_missing_cards_to_flush(self,player,is_turn):
+        possible_pairs = []
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_color = (0,0)
+        player_cards_color = (players_listed_cards[0][0],players_listed_cards[1][0])
+        for card in self.cards:
+            for rank in player_cards_color:
+                if rank in card and card not in possible_pairs and card not in players_cards:
+                    if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
+                        possible_pairs.append(card)
+        return possible_pairs
+
+    def get_missing_cards_to_full_house(self,player,is_turn):
+        possible_pairs = []
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_ranks = (0,0)
+        try:
+            player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),self.card_rankings.index(players_listed_cards[1][1]))
+        except:
+            if "1" in players_listed_cards[1] and "0" in players_listed_cards[1] and "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                player_cards_ranks = (8,8)
+            else:
+                if "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                    player_cards_ranks = (8, self.card_rankings.index(players_listed_cards[1][1]))
+                if "1" in players_listed_cards[1] and "0" in players_listed_cards[1]:
+                    player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),8)
+
+        player_cards_ranks = (self.card_rankings[player_cards_ranks[0]], self.card_rankings[player_cards_ranks[1]])
+        for card in self.cards:
+            for rank in player_cards_ranks:
+                if rank in card and card not in possible_pairs and card not in players_cards:
+                    if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
+                        possible_pairs.append(card)
+        return possible_pairs
+
+    def get_missing_cards_to_straightflush(self,player,is_turn):
+        possible_straights = []
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_color = (0,0)
+        player_cards_color = (players_listed_cards[0][0],players_listed_cards[1][0])
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_ranks = (0,0)
+        try:
+            player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),self.card_rankings.index(players_listed_cards[1][1]))
+        except:
+            if "1" in players_listed_cards[1] and "0" in players_listed_cards[1] and "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                player_cards_ranks = (8,8)
+            else:
+                if "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                    player_cards_ranks = (8, self.card_rankings.index(players_listed_cards[1][1]))
+                if "1" in players_listed_cards[1] and "0" in players_listed_cards[1]:
+                    player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),8)
+
+        d = abs(player_cards_ranks[0]-player_cards_ranks[1])
+        if d <= 5 and d != 0 and player_cards_color[0] == player_cards_color[1]:
+            for x in range(0,2):
+                offset = 0
+                for i in range(0,5):
+                    current_straight = [0,0,0,0,0]
+                    current_straight[i] = self.card_rankings[player_cards_ranks[x]]
+                    #print("player cards rank index", player_cards_ranks[x], self.card_rankings[player_cards_ranks[x]])
+                    for y in range(0,5):
+                        if not y == i and player_cards_ranks[x]-offset+y <= len(self.card_rankings)-1 and player_cards_ranks[x]-offset+y >= 0:
+                            current_straight[y] = self.card_rankings[player_cards_ranks[x]-offset+y]
+                    if len(current_straight) == 5 and 0 not in current_straight:
+                        if current_straight not in possible_straights:
+                            if is_turn == True and self.card_rankings[player_cards_ranks[0]] in current_straight and self.card_rankings[player_cards_ranks[1]] in current_straight:
+                                possible_straights.append(current_straight.copy())
+                            else:
+                                pass
+                    offset += 1
+
+            ps = []
+            for liste in possible_straights:
+                for rank in liste:
+                    ps.append(rank)
+
+            possible_straights = []
+            for card in self.cards:
+                for rank in ps:
+                    if player_cards_color[0] in card or player_cards_color[1] in card:
+                        if rank in card and card not in possible_straights and card not in players_cards:
+                            if self.cards.index(card)%6 != 0 and not self.cards.index(card) == 0:
+                                possible_straights.append(card)
+            return possible_straights
+        else:
+            return False
     
+    def get_missing_cards_to_royal_Flush(self,player,is_turn):
+        needed_ranks = ["A","K","Q","J","10"]
+        possible_straights = []
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_color = (0,0)
+        player_cards_color = (players_listed_cards[0][0],players_listed_cards[1][0])
+        players_cards = self.players_cards[player]
+        players_listed_cards = (list(players_cards[0]),list(players_cards[1]))
+        player_cards_ranks = (0,0)
+        try:
+            player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),self.card_rankings.index(players_listed_cards[1][1]))
+        except:
+            if "1" in players_listed_cards[1] and "0" in players_listed_cards[1] and "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                player_cards_ranks = (8,8)
+            else:
+                if "1" in players_listed_cards[0] and "0" in players_listed_cards[0]:
+                    player_cards_ranks = (8, self.card_rankings.index(players_listed_cards[1][1]))
+                if "1" in players_listed_cards[1] and "0" in players_listed_cards[1]:
+                    player_cards_ranks = (self.card_rankings.index(players_listed_cards[0][1]),8)
+        if player_cards_color[0] == player_cards_color[1] and player_cards_ranks[0] in needed_ranks and player_cards_ranks[1] in needed_ranks:
+            for rank in needed_ranks:
+                possible_straights.append(f"{player_cards_color[0]}{rank}") 
+
     def main_loop(self):
-        print(self.get_missing_cards_to_pair("player1",True))
-        print(self.missing_cards_to_straight("player1",True))
-        print(self.get_missing_cards_to_two_pair("player1",True))
+        print(self.get_missing_cards_to_straightflush("player1",True))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
