@@ -327,9 +327,33 @@ class Poker():
                 x = len(x)/2
                 if x > best[1]:
                     best = ["two_pair",x]
+            else:
+                x = len(x)/3
+                if x > best[1]:
+                    best = ["two_pair",x]
+
+            x,y = self.get_missing_cards_to_three_of_a_kind(player,True)
+            if y:
+                x = len(x)/1
+                if x > best[1]:
+                    best = ["three_of_a_kind",x]
+            else:
+                x = len(x)/2
+                if x > best[1]:
+                    best = ["two_pair",x]
+
+            x = self.get_missing_cards_to_straight(player, True)
+            if not x == [] or not x == False:
+                x = len(x)/3
+                if x > best[1]:
+                    best = ["straight",x]
+            
+
+
+
             
     def main_loop(self):
-        print(self.get_missing_cards_to_straightflush("player1",True))
+        print(self.get_most_possible_hand("player1",True))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
